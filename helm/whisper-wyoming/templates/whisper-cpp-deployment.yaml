@@ -33,9 +33,9 @@ spec:
           MODEL_FILE="/models/ggml-${MODEL}.bin"
           if [ ! -f "$MODEL_FILE" ]; then
             echo "Downloading model: $MODEL"
-            # Use wget to download the model from Hugging Face
+            # Use curl to download the model from Hugging Face
             MODEL_URL="https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-${MODEL}.bin"
-            wget -O "$MODEL_FILE" "$MODEL_URL" || exit 1
+            curl -L -o "$MODEL_FILE" "$MODEL_URL" || exit 1
             echo "Model downloaded successfully"
           else
             echo "Model already exists: $MODEL_FILE"
