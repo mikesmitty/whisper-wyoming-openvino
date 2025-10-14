@@ -2,9 +2,15 @@
 # Save as custom-values.yaml and install with:
 # helm install whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml
 
+# Opinionated default setup using NFD and Intel GPU device plugin operator
+# This configuration assumes:
+# - Node Feature Discovery (NFD) is installed
+# - Intel GPU device plugin operator is deployed
+# - Default storage class is available
+
 # Use a larger, more accurate model
 whisperCpp:
-  model: small.en  # Options: tiny.en, base.en, small.en, medium.en, large-v3
+  model: small-en  # Options: tiny-en, base-en, small-en, medium-en, large-v3
   language: en
   beamSize: 5
   
@@ -34,15 +40,14 @@ wyomingApi:
       cpu: 100m
       memory: 128Mi
 
-# Enable persistent storage with custom storage class
+# Enable persistent storage with default storage class
 persistence:
   enabled: true
   size: 20Gi  # Increase size for larger models
-  storageClass: "fast-ssd"  # Use your storage class name
-  # Or use an existing PVC:
-  # existingClaim: "my-existing-pvc"
+  # storageClass defaults to "" which uses the cluster default
+  storageClass: ""
 
-# Schedule on nodes with Intel GPU
+# Schedule on nodes with Intel GPU (detected by NFD)
 nodeSelector:
   intel.feature.node.kubernetes.io/gpu: "true"
 
@@ -66,3 +71,4 @@ nodeSelector:
 #             values:
 #             - whisper-wyoming
 #         topologyKey: kubernetes.io/hostname
+

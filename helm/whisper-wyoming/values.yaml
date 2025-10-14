@@ -3,7 +3,8 @@ replicaCount: 1
 whisperCpp:
   image:
     repository: ghcr.io/ggml-org/whisper.cpp
-    tag: main-intel
+    # renovate: datasource=github-tags depName=ggml-org/whisper.cpp
+    tag: main-intel-a91dd3be72f70dd1b3cb6e252f35fa17b93f596c
     pullPolicy: IfNotPresent
   
   service:
@@ -17,7 +18,7 @@ whisperCpp:
       gpu.intel.com/i915: 1
   
   # Whisper model configuration
-  model: base.en
+  model: base-en
   language: en
   beamSize: 5
   prompt: ""
@@ -42,8 +43,7 @@ whisperCpp:
 
 wyomingApi:
   image:
-    # This should be built from https://github.com/ser/wyoming-whisper-api-client
-    repository: ghcr.io/ser/wyoming-whisper-api-client
+    repository: ghcr.io/mikesmitty/ser-wyoming-whisper-api-client
     tag: latest
     pullPolicy: IfNotPresent
   
@@ -71,6 +71,25 @@ wyomingApi:
         - ALL
     seccompProfile:
       type: RuntimeDefault
+  
+  # Liveness and readiness probes
+  livenessProbe:
+    enabled: false
+    tcpSocket:
+      port: wyoming
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  readinessProbe:
+    enabled: true
+    tcpSocket:
+      port: wyoming
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
 
 # Model download init container configuration
 modelDownload:
