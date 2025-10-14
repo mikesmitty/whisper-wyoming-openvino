@@ -1,6 +1,5 @@
 # Helm build artifacts
 *.tgz
-.helmignore
 
 # IDE
 .vscode/
