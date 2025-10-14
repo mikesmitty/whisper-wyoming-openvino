@@ -9,8 +9,8 @@ metadata:
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode }}
-  {{- with .Values.persistence.storageClass }}
-  storageClassName: {{ . }}
+  {{- if .Values.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
   {{- end }}
   resources:
     requests:
