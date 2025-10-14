@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "whisper-wyoming.fullname" . }}-whisper-cpp
+  labels:
+    {{- include "whisper-wyoming.whisperCppLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "whisper-wyoming.whisperCppSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "whisper-wyoming.whisperCppSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.modelDownload.enabled }}
+      initContainers:
+      - name: model-download
+        image: "{{ .Values.modelDownload.image.repository }}:{{ .Values.modelDownload.image.tag }}"
+        imagePullPolicy: {{ .Values.modelDownload.image.pullPolicy }}
+        command:
+        - sh
+        - -c
+        - |
+          MODEL="{{ .Values.whisperCpp.model }}"
+          MODEL_FILE="/models/ggml-${MODEL}.bin"
+          if [ ! -f "$MODEL_FILE" ]; then
+            echo "Downloading model: $MODEL"
+            # Use wget to download the model from Hugging Face
+            MODEL_URL="https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-${MODEL}.bin"
+            wget -O "$MODEL_FILE" "$MODEL_URL" || exit 1
+            echo "Model downloaded successfully"
+          else
+            echo "Model already exists: $MODEL_FILE"
+          fi
+          # Ensure SYCL cache directory exists
+          mkdir -p /models/sycl_cache
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        securityContext:
+          {{- toYaml .Values.whisperCpp.securityContext | nindent 10 }}
+      {{- end }}
+      containers:
+      - name: whisper-cpp
+        image: "{{ .Values.whisperCpp.image.repository }}:{{ .Values.whisperCpp.image.tag }}"
+        imagePullPolicy: {{ .Values.whisperCpp.image.pullPolicy }}
+        command:
+        - /whisper.cpp/build/bin/whisper-server
+        args:
+        - "-l"
+        - "{{ .Values.whisperCpp.language }}"
+        - "-bs"
+        - "{{ .Values.whisperCpp.beamSize }}"
+        - "-m"
+        - "/models/ggml-{{ .Values.whisperCpp.model }}.bin"
+        - "--host"
+        - "0.0.0.0"
+        - "--port"
+        - "{{ .Values.whisperCpp.service.port }}"
+        - "--suppress-nst"
+        {{- if .Values.whisperCpp.prompt }}
+        - "--prompt"
+        - "{{ .Values.whisperCpp.prompt }}"
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.whisperCpp.service.port }}
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.whisperCpp.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        - name: dri
+          mountPath: /dev/dri
+        resources:
+          {{- toYaml .Values.whisperCpp.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.whisperCpp.securityContext | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: models
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-models" (include "whisper-wyoming.fullname" .)) }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+      - name: dri
+        hostPath:
+          path: /dev/dri
+          type: Directory
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

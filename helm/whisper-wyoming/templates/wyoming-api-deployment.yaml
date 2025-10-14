@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "whisper-wyoming.fullname" . }}-wyoming-api
+  labels:
+    {{- include "whisper-wyoming.wyomingApiLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "whisper-wyoming.wyomingApiSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "whisper-wyoming.wyomingApiSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: wyoming-api
+        image: "{{ .Values.wyomingApi.image.repository }}:{{ .Values.wyomingApi.image.tag }}"
+        imagePullPolicy: {{ .Values.wyomingApi.image.pullPolicy }}
+        command:
+        - /app/script/run
+        args:
+        - "--uri"
+        - "tcp://0.0.0.0:{{ .Values.wyomingApi.service.port }}"
+        - "--api"
+        - "http://{{ include "whisper-wyoming.fullname" . }}-whisper-cpp:{{ .Values.whisperCpp.service.port }}/inference"
+        ports:
+        - name: wyoming
+          containerPort: {{ .Values.wyomingApi.service.port }}
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.wyomingApi.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.wyomingApi.securityContext | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: wyoming
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: wyoming
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

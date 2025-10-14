@@ -1,0 +1,68 @@
+# Example configuration for production deployment
+# Save as custom-values.yaml and install with:
+# helm install whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml
+
+# Use a larger, more accurate model
+whisperCpp:
+  model: small.en  # Options: tiny.en, base.en, small.en, medium.en, large-v3
+  language: en
+  beamSize: 5
+  
+  # Configure resource limits for Intel GPU
+  resources:
+    limits:
+      gpu.intel.com/i915: 1
+      memory: 4Gi
+      cpu: 2000m
+    requests:
+      gpu.intel.com/i915: 1
+      memory: 2Gi
+      cpu: 1000m
+
+# Expose Wyoming API externally via LoadBalancer
+wyomingApi:
+  service:
+    type: LoadBalancer
+    # Optionally specify a load balancer IP
+    # loadBalancerIP: "192.168.1.100"
+  
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# Enable persistent storage with custom storage class
+persistence:
+  enabled: true
+  size: 20Gi  # Increase size for larger models
+  storageClass: "fast-ssd"  # Use your storage class name
+  # Or use an existing PVC:
+  # existingClaim: "my-existing-pvc"
+
+# Schedule on nodes with Intel GPU
+nodeSelector:
+  intel.feature.node.kubernetes.io/gpu: "true"
+
+# Optional: Add tolerations if GPU nodes are tainted
+# tolerations:
+# - key: "gpu"
+#   operator: "Equal"
+#   value: "intel"
+#   effect: "NoSchedule"
+
+# Optional: Use pod anti-affinity for HA
+# affinity:
+#   podAntiAffinity:
+#     preferredDuringSchedulingIgnoredDuringExecution:
+#     - weight: 100
+#       podAffinityTerm:
+#         labelSelector:
+#           matchExpressions:
+#           - key: app.kubernetes.io/name
+#             operator: In
+#             values:
+#             - whisper-wyoming
+#         topologyKey: kubernetes.io/hostname

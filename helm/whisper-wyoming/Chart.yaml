@@ -1,0 +1,17 @@
+apiVersion: v2
+name: whisper-wyoming
+description: A Helm chart for Whisper.cpp with Wyoming API on Intel GPU
+type: application
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+  - whisper
+  - wyoming
+  - speech-to-text
+  - intel-gpu
+maintainers:
+  - name: mikesmitty
+sources:
+  - https://github.com/mikesmitty/whisper-wyoming-openvino
+  - https://github.com/ggml-org/whisper.cpp
+  - https://github.com/ser/wyoming-whisper-api-client
