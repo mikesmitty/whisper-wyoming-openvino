@@ -21,6 +21,21 @@ Kubernetes Helm chart for deploying Whisper.cpp speech-to-text with Wyoming prot
 
 ### Installation
 
+#### Option 1: Install from OCI Registry (Recommended)
+
+```bash
+# Install the Helm chart from GHCR
+helm install whisper-wyoming oci://ghcr.io/mikesmitty/whisper-wyoming --version 0.1.0
+
+# Check the status
+helm status whisper-wyoming
+
+# Access the Wyoming API (port-forward for ClusterIP)
+kubectl port-forward svc/whisper-wyoming-wyoming-api 7891:7891
+```
+
+#### Option 2: Install from source
+
 ```bash
 # Clone the repository
 git clone https://github.com/mikesmitty/whisper-wyoming-openvino.git

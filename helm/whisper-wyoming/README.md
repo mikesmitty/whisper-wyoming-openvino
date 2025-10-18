@@ -24,9 +24,21 @@ This chart combines:
 
 ### Quick Start
 
-Install the chart with the release name `whisper-wyoming`:
+#### Option 1: Install from OCI Registry (Recommended)
+
+Install the chart from GitHub Container Registry with the release name `whisper-wyoming`:
 
 ```bash
+helm install whisper-wyoming oci://ghcr.io/mikesmitty/whisper-wyoming --version 0.1.0
+```
+
+#### Option 2: Install from source
+
+Install the chart from a local clone:
+
+```bash
+git clone https://github.com/mikesmitty/whisper-wyoming-openvino.git
+cd whisper-wyoming-openvino
 helm install whisper-wyoming ./helm/whisper-wyoming
 ```
 
@@ -53,7 +65,13 @@ nodeSelector:
   intel.feature.node.kubernetes.io/gpu: "true"
 ```
 
-Install with custom values:
+Install with custom values from OCI registry:
+
+```bash
+helm install whisper-wyoming oci://ghcr.io/mikesmitty/whisper-wyoming --version 0.1.0 -f custom-values.yaml
+```
+
+Or from source:
 
 ```bash
 helm install whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml

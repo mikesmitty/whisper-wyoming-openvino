@@ -1,0 +1,54 @@
+name: Release Helm Chart to GHCR
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'helm/whisper-wyoming/**'
+      - '.github/workflows/helm-release.yaml'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  CHART_NAME: whisper-wyoming
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'v3.19.0'
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
+
+      - name: Package Helm chart
+        run: |
+          helm package helm/${{ env.CHART_NAME }}
+
+      - name: Push Helm chart to GHCR
+        run: |
+          CHART_VERSION=$(helm show chart helm/${{ env.CHART_NAME }} | grep '^version:' | awk '{print $2}')
+          helm push ${{ env.CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}
+
+      - name: Output chart details
+        run: |
+          CHART_VERSION=$(helm show chart helm/${{ env.CHART_NAME }} | grep '^version:' | awk '{print $2}')
+          echo "Chart pushed successfully!"
+          echo "Chart: ${{ env.CHART_NAME }}"
+          echo "Version: ${CHART_VERSION}"
+          echo "Registry: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.CHART_NAME }}"
+          echo ""
+          echo "To install this chart:"
+          echo "  helm install my-release oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.CHART_NAME }} --version ${CHART_VERSION}"
