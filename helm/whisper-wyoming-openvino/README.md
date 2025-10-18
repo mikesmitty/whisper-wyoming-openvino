@@ -26,10 +26,10 @@ This chart combines:
 
 #### Option 1: Install from OCI Registry (Recommended)
 
-Install the chart from GitHub Container Registry with the release name `whisper-wyoming`:
+Install the chart from GitHub Container Registry with the release name `whisper-wyoming-openvino`:
 
 ```bash
-helm install whisper-wyoming oci://ghcr.io/mikesmitty/whisper-wyoming --version 0.1.0
+helm install whisper-wyoming-openvino oci://ghcr.io/mikesmitty/whisper-wyoming-openvino --version 0.1.0
 ```
 
 #### Option 2: Install from source
@@ -39,7 +39,7 @@ Install the chart from a local clone:
 ```bash
 git clone https://github.com/mikesmitty/whisper-wyoming-openvino.git
 cd whisper-wyoming-openvino
-helm install whisper-wyoming ./helm/whisper-wyoming
+helm install whisper-wyoming-openvino ./helm/whisper-wyoming-openvino
 ```
 
 ### Custom Configuration
@@ -68,13 +68,13 @@ nodeSelector:
 Install with custom values from OCI registry:
 
 ```bash
-helm install whisper-wyoming oci://ghcr.io/mikesmitty/whisper-wyoming --version 0.1.0 -f custom-values.yaml
+helm install whisper-wyoming-openvino oci://ghcr.io/mikesmitty/whisper-wyoming-openvino --version 0.1.0 -f custom-values.yaml
 ```
 
 Or from source:
 
 ```bash
-helm install whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml
+helm install whisper-wyoming-openvino ./helm/whisper-wyoming-openvino -f custom-values.yaml
 ```
 
 ## Configuration
@@ -133,13 +133,13 @@ OpenVINO-optimized models (recommended for Intel GPU):
 After installation, get connection details:
 
 ```bash
-helm status whisper-wyoming
+helm status whisper-wyoming-openvino
 ```
 
 For ClusterIP service, port-forward to access:
 
 ```bash
-kubectl port-forward svc/whisper-wyoming-wyoming-api 7891:7891
+kubectl port-forward svc/whisper-wyoming-openvino-wyoming-api 7891:7891
 ```
 
 ### Using with Home Assistant
@@ -149,7 +149,7 @@ Add to your Home Assistant `configuration.yaml`:
 ```yaml
 wyoming:
   - platform: whisper
-    host: whisper-wyoming-wyoming-api.default.svc.cluster.local
+    host: whisper-wyoming-openvino-wyoming-api.default.svc.cluster.local
     port: 7891
 ```
 
@@ -198,16 +198,16 @@ kubectl get pods -n kube-system | grep intel-gpu-plugin
 
 ## Uninstallation
 
-To uninstall/delete the `whisper-wyoming` deployment:
+To uninstall/delete the `whisper-wyoming-openvino` deployment:
 
 ```bash
-helm uninstall whisper-wyoming
+helm uninstall whisper-wyoming-openvino
 ```
 
 To also delete the PVC:
 
 ```bash
-kubectl delete pvc whisper-wyoming-models
+kubectl delete pvc whisper-wyoming-openvino-models
 ```
 
 ## References

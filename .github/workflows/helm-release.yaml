@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'helm/whisper-wyoming/**'
+      - 'helm/whisper-wyoming-openvino/**'
       - '.github/workflows/helm-release.yaml'
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  CHART_NAME: whisper-wyoming
+  CHART_NAME: whisper-wyoming-openvino
 
 jobs:
   release:
