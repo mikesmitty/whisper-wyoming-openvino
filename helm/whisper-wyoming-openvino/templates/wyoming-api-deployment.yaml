@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "whisper-wyoming.fullname" . }}-wyoming-api
+  name: {{ include "whisper-wyoming-openvino.fullname" . }}-wyoming-api
   labels:
-    {{- include "whisper-wyoming.wyomingApiLabels" . | nindent 4 }}
+    {{- include "whisper-wyoming-openvino.wyomingApiLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "whisper-wyoming.wyomingApiSelectorLabels" . | nindent 6 }}
+      {{- include "whisper-wyoming-openvino.wyomingApiSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "whisper-wyoming.wyomingApiSelectorLabels" . | nindent 8 }}
+        {{- include "whisper-wyoming-openvino.wyomingApiSelectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -30,7 +30,7 @@ spec:
         - "--uri"
         - "tcp://0.0.0.0:{{ .Values.wyomingApi.service.port }}"
         - "--api"
-        - "http://{{ include "whisper-wyoming.fullname" . }}-whisper-cpp:{{ .Values.whisperCpp.service.port }}/inference"
+        - "http://{{ include "whisper-wyoming-openvino.fullname" . }}-whisper-cpp:{{ .Values.whisperCpp.service.port }}/inference"
         ports:
         - name: wyoming
           containerPort: {{ .Values.wyomingApi.service.port }}
