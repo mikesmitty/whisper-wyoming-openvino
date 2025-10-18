@@ -1,0 +1,123 @@
+replicaCount: 1
+
+whisperCpp:
+  image:
+    repository: ghcr.io/ggml-org/whisper.cpp
+    # renovate: datasource=github-tags depName=ggml-org/whisper.cpp
+    tag: main-intel-4979e04f5dcaccb36057e059bbaed8a2f5288315 # v1.8.2
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 8910
+  
+  resources:
+    limits:
+      gpu.intel.com/i915: 1
+    requests:
+      gpu.intel.com/i915: 1
+  
+  # Whisper model configuration
+  model: distil-whisper-large-v3-int8-ov
+  language: en
+  beamSize: 5
+  prompt: ""
+  
+  # Security context
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  
+  # Environment variables for SYCL/Intel GPU
+  env:
+    SYCL_CACHE_PERSISTENT: "1"
+    SYCL_CACHE_DIR: "/models/sycl_cache"
+    SYCL_DEVICE_ALLOWLIST: "BackendName:level_zero"
+
+wyomingApi:
+  image:
+    repository: ghcr.io/mikesmitty/ser-wyoming-whisper-api-client
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 7891
+    # Set to LoadBalancer or NodePort to expose externally
+    # type: LoadBalancer
+  
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  
+  # Liveness and readiness probes
+  livenessProbe:
+    enabled: false
+    tcpSocket:
+      port: wyoming
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  readinessProbe:
+    enabled: true
+    tcpSocket:
+      port: wyoming
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Model download init container configuration
+modelDownload:
+  enabled: true
+  image:
+    repository: busybox
+    tag: latest
+    pullPolicy: IfNotPresent
+
+# Persistent storage for models
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  # existingClaim: ""
+
+# Node selector for Intel GPU nodes
+nodeSelector: {}
+  # intel.feature.node.kubernetes.io/gpu: "true"
+
+tolerations: []
+
+affinity: {}
+
+# Pod security context
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
+imagePullSecrets: []

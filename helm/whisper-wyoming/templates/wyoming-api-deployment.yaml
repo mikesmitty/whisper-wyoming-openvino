@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "whisper-wyoming.fullname" . }}-wyoming-api
+  labels:
+    {{- include "whisper-wyoming.wyomingApiLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "whisper-wyoming.wyomingApiSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "whisper-wyoming.wyomingApiSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: wyoming-api
+        image: "{{ .Values.wyomingApi.image.repository }}:{{ .Values.wyomingApi.image.tag }}"
+        imagePullPolicy: {{ .Values.wyomingApi.image.pullPolicy }}
+        command:
+        - /app/script/run
+        args:
+        - "--uri"
+        - "tcp://0.0.0.0:{{ .Values.wyomingApi.service.port }}"
+        - "--api"
+        - "http://{{ include "whisper-wyoming.fullname" . }}-whisper-cpp:{{ .Values.whisperCpp.service.port }}/inference"
+        ports:
+        - name: wyoming
+          containerPort: {{ .Values.wyomingApi.service.port }}
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.wyomingApi.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.wyomingApi.securityContext | nindent 10 }}
+        {{- if .Values.wyomingApi.livenessProbe.enabled }}
+        livenessProbe:
+          tcpSocket:
+            {{- toYaml .Values.wyomingApi.livenessProbe.tcpSocket | nindent 12 }}
+          initialDelaySeconds: {{ .Values.wyomingApi.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.wyomingApi.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.wyomingApi.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.wyomingApi.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.wyomingApi.readinessProbe.enabled }}
+        readinessProbe:
+          tcpSocket:
+            {{- toYaml .Values.wyomingApi.readinessProbe.tcpSocket | nindent 12 }}
+          initialDelaySeconds: {{ .Values.wyomingApi.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.wyomingApi.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.wyomingApi.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.wyomingApi.readinessProbe.failureThreshold }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

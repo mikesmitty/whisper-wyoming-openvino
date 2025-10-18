@@ -1,0 +1,44 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
+  $ helm get all {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+Wyoming API is now available and can be accessed:
+
+{{- if eq .Values.wyomingApi.service.type "NodePort" }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "whisper-wyoming.fullname" . }}-wyoming-api)
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo "Wyoming API URL: tcp://$NODE_IP:$NODE_PORT"
+{{- else if eq .Values.wyomingApi.service.type "LoadBalancer" }}
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        You can watch the status by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "whisper-wyoming.fullname" . }}-wyoming-api'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "whisper-wyoming.fullname" . }}-wyoming-api --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo "Wyoming API URL: tcp://$SERVICE_IP:{{ .Values.wyomingApi.service.port }}"
+{{- else if eq .Values.wyomingApi.service.type "ClusterIP" }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "{{ include "whisper-wyoming.wyomingApiSelectorLabels" . | replace "\n" "," }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Forward local port to Wyoming API:"
+  echo "  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME {{ .Values.wyomingApi.service.port }}:{{ .Values.wyomingApi.service.port }}"
+  echo "Then access at: tcp://127.0.0.1:{{ .Values.wyomingApi.service.port }}"
+{{- end }}
+
+Whisper.cpp server is running internally and can be accessed at:
+  http://{{ include "whisper-wyoming.fullname" . }}-whisper-cpp:{{ .Values.whisperCpp.service.port }}
+
+Configuration:
+  - Model: {{ .Values.whisperCpp.model }}
+  - Language: {{ .Values.whisperCpp.language }}
+  - Beam Size: {{ .Values.whisperCpp.beamSize }}
+  - Intel GPU (i915): {{ if .Values.whisperCpp.resources.limits }}Enabled{{ else }}Disabled{{ end }}
+
+{{- if .Values.persistence.enabled }}
+Models are stored in PVC: {{ .Values.persistence.existingClaim | default (printf "%s-models" (include "whisper-wyoming.fullname" .)) }}
+{{- else }}
+WARNING: Persistence is disabled. Models will be re-downloaded on pod restart.
+{{- end }}
+
+For more information on using this chart, visit:
+  https://github.com/mikesmitty/whisper-wyoming-openvino

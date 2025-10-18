@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "whisper-wyoming.fullname" . }}-whisper-cpp
+  labels:
+    {{- include "whisper-wyoming.whisperCppLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "whisper-wyoming.whisperCppSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "whisper-wyoming.whisperCppSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.modelDownload.enabled }}
+      initContainers:
+      - name: model-download
+        image: "{{ .Values.modelDownload.image.repository }}:{{ .Values.modelDownload.image.tag }}"
+        imagePullPolicy: {{ .Values.modelDownload.image.pullPolicy }}
+        command:
+        - sh
+        - -c
+        - |
+          MODEL="{{ .Values.whisperCpp.model }}"
+          MODEL_DIR="/models"
+          mkdir -p "$MODEL_DIR"
+          
+          # Files with model name preserved for change detection
+          XML_FILE="$MODEL_DIR/${MODEL}.xml"
+          BIN_FILE="$MODEL_DIR/${MODEL}.bin"
+          
+          # Check if both required files exist
+          if [ ! -f "$XML_FILE" ] || [ ! -f "$BIN_FILE" ]; then
+            echo "Downloading model: $MODEL"
+            
+            # Download XML file
+            XML_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.xml"
+            wget -O "$XML_FILE" "$XML_URL" || exit 1
+            echo "Downloaded XML file"
+            
+            # Download BIN file
+            BIN_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.bin"
+            wget -O "$BIN_FILE" "$BIN_URL" || exit 1
+            echo "Downloaded BIN file"
+            
+            echo "Model downloaded successfully"
+          else
+            echo "Model already exists: $MODEL"
+          fi
+          
+          # Ensure SYCL cache directory exists
+          mkdir -p /models/sycl_cache
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        securityContext:
+          {{- toYaml .Values.whisperCpp.securityContext | nindent 10 }}
+      {{- end }}
+      containers:
+      - name: whisper-cpp
+        image: "{{ .Values.whisperCpp.image.repository }}:{{ .Values.whisperCpp.image.tag }}"
+        imagePullPolicy: {{ .Values.whisperCpp.image.pullPolicy }}
+        command:
+        - /whisper.cpp/build/bin/whisper-server
+        args:
+        - "-l"
+        - "{{ .Values.whisperCpp.language }}"
+        - "-bs"
+        - "{{ .Values.whisperCpp.beamSize }}"
+        - "-m"
+        - "/models/{{ .Values.whisperCpp.model }}.bin"
+        - "--host"
+        - "0.0.0.0"
+        - "--port"
+        - "{{ .Values.whisperCpp.service.port }}"
+        - "--suppress-nst"
+        {{- if .Values.whisperCpp.prompt }}
+        - "--prompt"
+        - "{{ .Values.whisperCpp.prompt }}"
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.whisperCpp.service.port }}
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.whisperCpp.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        resources:
+          {{- toYaml .Values.whisperCpp.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.whisperCpp.securityContext | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: models
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-models" (include "whisper-wyoming.fullname" .)) }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
