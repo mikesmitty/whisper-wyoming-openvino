@@ -30,12 +30,12 @@ spec:
         - -c
         - |
           MODEL="{{ .Values.whisperCpp.model }}"
-          MODEL_DIR="/models/${MODEL}"
+          MODEL_DIR="/models"
           mkdir -p "$MODEL_DIR"
           
           # Files with model name preserved for change detection
-          XML_FILE="$MODEL_DIR/${MODEL}-openvino_encoder_model.xml"
-          BIN_FILE="$MODEL_DIR/${MODEL}-openvino_encoder_model.bin"
+          XML_FILE="$MODEL_DIR/${MODEL}.xml"
+          BIN_FILE="$MODEL_DIR/${MODEL}.bin"
           
           # Check if both required files exist
           if [ ! -f "$XML_FILE" ] || [ ! -f "$BIN_FILE" ]; then
@@ -76,7 +76,7 @@ spec:
         - "-bs"
         - "{{ .Values.whisperCpp.beamSize }}"
         - "-m"
-        - "/models/{{ .Values.whisperCpp.model }}/{{ .Values.whisperCpp.model }}-openvino_encoder_model.xml"
+        - "/models/{{ .Values.whisperCpp.model }}.bin"
         - "--host"
         - "0.0.0.0"
         - "--port"

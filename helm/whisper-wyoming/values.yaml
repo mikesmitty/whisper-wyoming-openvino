@@ -4,7 +4,7 @@ whisperCpp:
   image:
     repository: ghcr.io/ggml-org/whisper.cpp
     # renovate: datasource=github-tags depName=ggml-org/whisper.cpp
-    tag: main-intel-4979e04f5dcaccb36057e059bbaed8a2f5288315
+    tag: main-intel-4979e04f5dcaccb36057e059bbaed8a2f5288315 # v1.8.2
     pullPolicy: IfNotPresent
   
   service:
