@@ -85,15 +85,28 @@ The following table lists the configurable parameters:
 
 ## Available Whisper Models
 
-- `tiny.en` - Smallest, fastest, least accurate (~75MB)
-- `tiny` - Multilingual version of tiny
-- `base.en` - Good balance of speed and accuracy (~140MB) 
-- `base` - Multilingual base model
-- `small.en` - Better accuracy (~470MB)
-- `small` - Multilingual small model
-- `medium.en` - High accuracy (~1.5GB)
-- `medium` - Multilingual medium model
-- `large-v3` - Best accuracy, slowest (~3GB)
+OpenVINO-optimized models (recommended for Intel GPU):
+- `distil-whisper-large-v3-int8-ov` - Default, good balance of quality and performance
+- `distil-whisper-large-v3-int4-ov` - Smaller size, faster inference
+- `distil-whisper-large-v3-fp16-ov` - Higher quality, more resources
+- `distil-whisper-large-v2-int8-ov` - Previous version, int8 quantization
+- `distil-whisper-large-v2-int4-ov` - Previous version, int4 quantization
+- `distil-whisper-large-v2-fp16-ov` - Previous version, fp16 precision
+- `whisper-large-v3-int8-ov` - Full large model, int8 quantization
+- `whisper-large-v3-int4-ov` - Full large model, int4 quantization
+- `whisper-large-v3-fp16-ov` - Full large model, fp16 precision
+- `whisper-medium-int8-ov` - Medium model, int8 quantization
+- `whisper-medium-int4-ov` - Medium model, int4 quantization
+- `whisper-medium-fp16-ov` - Medium model, fp16 precision
+- `whisper-medium.en-int8-ov` - Medium English-only, int8
+- `whisper-medium.en-int4-ov` - Medium English-only, int4
+- `whisper-medium.en-fp16-ov` - Medium English-only, fp16
+- `whisper-base-int8-ov` - Base model, int8 quantization
+- `whisper-base-int4-ov` - Base model, int4 quantization
+- `whisper-base-fp16-ov` - Base model, fp16 precision
+- `whisper-tiny-int8-ov` - Tiny model, int8 quantization
+- `whisper-tiny-int4-ov` - Tiny model, int4 quantization
+- `whisper-tiny-fp16-ov` - Tiny model, fp16 precision
 
 ## Usage
 

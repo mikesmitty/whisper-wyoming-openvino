@@ -7,7 +7,7 @@
 
 # Use a larger, more accurate model
 whisperCpp:
-  model: small-en  # Options: tiny-en, base-en, small-en, medium-en, large-v3
+  model: distil-whisper-large-v3-fp16-ov  # See README for full list of available OpenVINO models
   language: en
   beamSize: 5
   
@@ -80,7 +80,7 @@ nodeSelector:
 # - Default storage class is available
 
 whisperCpp:
-  model: small-en
+  model: distil-whisper-large-v3-int8-ov
   language: en
   beamSize: 5
   

@@ -30,15 +30,28 @@ spec:
         - -c
         - |
           MODEL="{{ .Values.whisperCpp.model }}"
-          MODEL_FILE="/models/${MODEL}.bin"
-          if [ ! -f "$MODEL_FILE" ]; then
+          MODEL_DIR="/models/${MODEL}"
+          mkdir -p "$MODEL_DIR"
+          
+          # Check if both required files exist
+          if [ ! -f "$MODEL_DIR/openvino_encoder_model.xml" ] || [ ! -f "$MODEL_DIR/openvino_encoder_model.bin" ]; then
             echo "Downloading model: $MODEL"
-            MODEL_URL="https://huggingface.co/OpenVINO/whisper-${MODEL}/resolve/main/${MODEL}.bin"
-            wget -O "$MODEL_FILE" "$MODEL_URL" || exit 1
+            
+            # Download XML file
+            XML_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.xml"
+            wget -O "$MODEL_DIR/openvino_encoder_model.xml" "$XML_URL" || exit 1
+            echo "Downloaded XML file"
+            
+            # Download BIN file
+            BIN_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.bin"
+            wget -O "$MODEL_DIR/openvino_encoder_model.bin" "$BIN_URL" || exit 1
+            echo "Downloaded BIN file"
+            
             echo "Model downloaded successfully"
           else
-            echo "Model already exists: $MODEL_FILE"
+            echo "Model already exists: $MODEL"
           fi
+          
           # Ensure SYCL cache directory exists
           mkdir -p /models/sycl_cache
         volumeMounts:
@@ -59,7 +72,7 @@ spec:
         - "-bs"
         - "{{ .Values.whisperCpp.beamSize }}"
         - "-m"
-        - "/models/{{ .Values.whisperCpp.model }}.bin"
+        - "/models/{{ .Values.whisperCpp.model }}/openvino_encoder_model.xml"
         - "--host"
         - "0.0.0.0"
         - "--port"

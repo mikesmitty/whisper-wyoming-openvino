@@ -26,10 +26,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clone ser/wyoming-whisper-api-client
+      - name: Checkout ser/wyoming-whisper-api-client
+        uses: actions/checkout@v5
+        with:
+          repository: ser/wyoming-whisper-api-client
+          path: /tmp/wyoming-api
+
+      - name: Get commit SHA
+        working-directory: /tmp/wyoming-api
         run: |
-          git clone https://github.com/ser/wyoming-whisper-api-client.git /tmp/wyoming-api
-          cd /tmp/wyoming-api
           echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
           echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 

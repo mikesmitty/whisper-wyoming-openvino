@@ -4,7 +4,7 @@ whisperCpp:
   image:
     repository: ghcr.io/ggml-org/whisper.cpp
     # renovate: datasource=github-tags depName=ggml-org/whisper.cpp
-    tag: main-intel-a91dd3be72f70dd1b3cb6e252f35fa17b93f596c
+    tag: main-intel-4979e04f5dcaccb36057e059bbaed8a2f5288315
     pullPolicy: IfNotPresent
   
   service:
@@ -18,7 +18,7 @@ whisperCpp:
       gpu.intel.com/i915: 1
   
   # Whisper model configuration
-  model: base-en
+  model: distil-whisper-large-v3-int8-ov
   language: en
   beamSize: 5
   prompt: ""
