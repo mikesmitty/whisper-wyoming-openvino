@@ -1,8 +1,8 @@
 {
   "packages": {
-    "helm/whisper-wyoming": {
+    "helm/whisper-wyoming-openvino": {
       "release-type": "helm",
-      "package-name": "whisper-wyoming",
+      "package-name": "whisper-wyoming-openvino",
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true
