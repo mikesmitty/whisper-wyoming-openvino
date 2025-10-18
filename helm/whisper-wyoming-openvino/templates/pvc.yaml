@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "whisper-wyoming.fullname" . }}-models
+  name: {{ include "whisper-wyoming-openvino.fullname" . }}-models
   labels:
-    {{- include "whisper-wyoming.labels" . | nindent 4 }}
+    {{- include "whisper-wyoming-openvino.labels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode }}

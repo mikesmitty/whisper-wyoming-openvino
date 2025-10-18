@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "whisper-wyoming.fullname" . }}-whisper-cpp
+  name: {{ include "whisper-wyoming-openvino.fullname" . }}-whisper-cpp
   labels:
-    {{- include "whisper-wyoming.whisperCppLabels" . | nindent 4 }}
+    {{- include "whisper-wyoming-openvino.whisperCppLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "whisper-wyoming.whisperCppSelectorLabels" . | nindent 6 }}
+      {{- include "whisper-wyoming-openvino.whisperCppSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "whisper-wyoming.whisperCppSelectorLabels" . | nindent 8 }}
+        {{- include "whisper-wyoming-openvino.whisperCppSelectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -122,7 +122,7 @@ spec:
       - name: models
         {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-models" (include "whisper-wyoming.fullname" .)) }}
+          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-models" (include "whisper-wyoming-openvino.fullname" .)) }}
         {{- else }}
         emptyDir: {}
         {{- end }}
