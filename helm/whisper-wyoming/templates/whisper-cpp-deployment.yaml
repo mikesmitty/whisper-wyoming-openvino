@@ -33,18 +33,22 @@ spec:
           MODEL_DIR="/models/${MODEL}"
           mkdir -p "$MODEL_DIR"
           
+          # Files with model name preserved for change detection
+          XML_FILE="$MODEL_DIR/${MODEL}-openvino_encoder_model.xml"
+          BIN_FILE="$MODEL_DIR/${MODEL}-openvino_encoder_model.bin"
+          
           # Check if both required files exist
-          if [ ! -f "$MODEL_DIR/openvino_encoder_model.xml" ] || [ ! -f "$MODEL_DIR/openvino_encoder_model.bin" ]; then
+          if [ ! -f "$XML_FILE" ] || [ ! -f "$BIN_FILE" ]; then
             echo "Downloading model: $MODEL"
             
             # Download XML file
             XML_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.xml"
-            wget -O "$MODEL_DIR/openvino_encoder_model.xml" "$XML_URL" || exit 1
+            wget -O "$XML_FILE" "$XML_URL" || exit 1
             echo "Downloaded XML file"
             
             # Download BIN file
             BIN_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.bin"
-            wget -O "$MODEL_DIR/openvino_encoder_model.bin" "$BIN_URL" || exit 1
+            wget -O "$BIN_FILE" "$BIN_URL" || exit 1
             echo "Downloaded BIN file"
             
             echo "Model downloaded successfully"
@@ -72,7 +76,7 @@ spec:
         - "-bs"
         - "{{ .Values.whisperCpp.beamSize }}"
         - "-m"
-        - "/models/{{ .Values.whisperCpp.model }}/openvino_encoder_model.xml"
+        - "/models/{{ .Values.whisperCpp.model }}/{{ .Values.whisperCpp.model }}-openvino_encoder_model.xml"
         - "--host"
         - "0.0.0.0"
         - "--port"
