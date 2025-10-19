@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.5...whisper-wyoming-openvino-v0.2.0) (2025-10-19)
+
+
+### Features
+
+* add slimmer whisper.cpp intel build ([38a21bf](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/38a21bf850835b0c077e363c5be02dcc68eba189))
+
+
+### Bug Fixes
+
+* remove old command from pod ([f20a4fc](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/f20a4fc4cbaad3f572967150159d75964ca577ea))
+
 ## [0.1.5](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.4...whisper-wyoming-openvino-v0.1.5) (2025-10-19)
 
 
