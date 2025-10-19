@@ -13,7 +13,7 @@
         "tag:\\s*main\\-intel\\-[a-f0-9]{40}\\s*#\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "depNameTemplate": "ggml-org/whisper.cpp",
-      "newValueTemplate": "tag: main-intel-{{{newDigest}}} # v{{{newValue}}}"
+      "autoReplaceStringTemplate": "tag: main-intel-{{{newDigest}}} # v{{{newValue}}}"
     }
   ]
 }
