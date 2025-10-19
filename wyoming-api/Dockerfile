@@ -12,4 +12,4 @@ RUN uv pip install -r /app/requirements.txt
 
 RUN chmod +x run.sh
 
-ENTRYPOINT ["bash", "/app/run.sh"]
+ENTRYPOINT ["uv", "run", "python", "wyoming_whisper_api_client"]
