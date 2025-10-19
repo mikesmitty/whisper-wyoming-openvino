@@ -10,11 +10,11 @@
         "/\\.ya?ml$/"
       ],
       "matchStrings": [
-        "tag:\\s*main\\-intel\\-[a-f0-9]{40}\\s*#\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "tag:\\s*main\\-intel\\-[a-f0-9]{40}\\s*#\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "ggml-org/whisper.cpp",
-      "autoReplaceStringTemplate": "tag: main-intel-{{{newDigest}}} # v{{{newValue}}}"
+      "autoReplaceStringTemplate": "tag: main-intel-{{{newDigest}}} # {{{newValue}}}"
     }
   ]
 }
