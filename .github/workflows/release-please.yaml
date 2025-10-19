@@ -14,8 +14,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      rp: ${{ steps.release.outputs }}
     steps:
       - name: Run release-please
         id: release
@@ -25,7 +24,7 @@ jobs:
 
   publish-helm-chart:
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
+    if: ${{ needs.release-please.outputs.rp['charts/whisper-wyoming-openvino--release_created'] == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -42,7 +41,7 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v4
         with:
-          version: 'v3.19.0'
+          version: "v3.19.0"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
