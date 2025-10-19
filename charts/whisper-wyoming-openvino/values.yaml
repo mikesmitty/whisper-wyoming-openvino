@@ -43,7 +43,7 @@ whisperCpp:
 wyomingApi:
   image:
     repository: ghcr.io/mikesmitty/ser-wyoming-whisper-api-client
-    tag: latest
+    tag: 20251019
     pullPolicy: IfNotPresent
 
   service:
