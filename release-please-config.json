@@ -4,7 +4,6 @@
   "include-component-in-tag": true,
   "packages": {
     "charts/whisper-wyoming-openvino": {
-      "include-component-in-tag": false,
       "release-type": "helm",
       "package-name": "whisper-wyoming-openvino"
     },
