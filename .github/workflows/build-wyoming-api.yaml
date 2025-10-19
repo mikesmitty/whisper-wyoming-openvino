@@ -1,14 +1,14 @@
-name: Build and Push Wyoming API Client Image
+name: Wyoming API Client Image
 
 on:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/build-wyoming-api.yaml'
+      - ".github/workflows/build-wyoming-api.yaml"
   schedule:
     # Rebuild weekly to get latest updates
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
   workflow_dispatch:
 
 env:
@@ -30,10 +30,10 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: ser/wyoming-whisper-api-client
-          path: ../wyoming-api
+          path: wyoming-api
 
       - name: Get commit SHA
-        working-directory: ../wyoming-api
+        working-directory: wyoming-api
         run: |
           echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
           echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -61,7 +61,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: ../wyoming-api
+          context: wyoming-api
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
