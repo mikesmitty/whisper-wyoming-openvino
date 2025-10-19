@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.1...whisper-wyoming-openvino-v0.1.2) (2025-10-19)
+
+
+### Bug Fixes
+
+* set real tag for ser-wyoming-whisper-api-client ([68fa313](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/68fa3136721566a50e57308af474c7288a617527))
+
 ## [0.1.1](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.0...whisper-wyoming-openvino-v0.1.1) (2025-10-19)
 
 
