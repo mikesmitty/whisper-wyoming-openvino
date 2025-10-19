@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.2...whisper-wyoming-openvino-v0.1.3) (2025-10-19)
+
+
+### Bug Fixes
+
+* ensure tag is a string ([fe31942](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/fe319426177aeb58e2db1f3fba3837d350856611))
+
 ## [0.1.2](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.1...whisper-wyoming-openvino-v0.1.2) (2025-10-19)
 
 
