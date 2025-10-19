@@ -14,7 +14,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      rp: ${{ steps.release.outputs }}
+      rp: ${{ toJson(steps.release.outputs) }}
     steps:
       - name: Run release-please
         id: release
