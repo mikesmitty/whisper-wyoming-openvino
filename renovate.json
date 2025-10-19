@@ -14,7 +14,7 @@
       ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "ggml-org/whisper.cpp",
-      "autoReplaceStringTemplate": "tag: main-intel-{{{newDigest}}} # {{{newVersion}}}"
+      "autoReplaceStringTemplate": "tag: main-intel-{{{newDigest}}} # {{{newValue}}}"
     }
   ]
 }
