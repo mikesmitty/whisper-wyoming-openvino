@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.4...whisper-wyoming-openvino-v0.1.5) (2025-10-19)
+
+
+### Bug Fixes
+
+* update docker image name ([c2a933f](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/c2a933f5db2813bd99f8c0a9014658aad9b0fdd4))
+
 ## [0.1.4](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.3...whisper-wyoming-openvino-v0.1.4) (2025-10-19)
 
 
