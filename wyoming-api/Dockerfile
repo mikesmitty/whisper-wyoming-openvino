@@ -1,15 +1,11 @@
 FROM ghcr.io/astral-sh/uv:python3.13-trixie-slim
 
-COPY ./wyoming-whisper-api-client /app
+ENV UV_NO_CACHE=1
+
+ADD . /app
 
 WORKDIR /app
 
-RUN uv venv /app/.venv
+RUN uv sync --locked
 
-ENV VIRTUAL_ENV=/app/.venv
-
-RUN uv pip install -r /app/requirements.txt
-
-RUN chmod +x run.sh
-
-ENTRYPOINT ["uv", "run", "python", "wyoming_whisper_api_client"]
+ENTRYPOINT ["uv", "run", "python", "-m", "wwac"]

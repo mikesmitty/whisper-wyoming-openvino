@@ -12,5 +12,9 @@
 .DS_Store
 Thumbs.db
 
-# Testing
-/tmp/
+# Python
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
