@@ -3,7 +3,7 @@ replicaCount: 1
 whisperCpp:
   image:
     repository: ghcr.io/ggml-org/whisper.cpp
-    tag: main-intel-1111111111111111111111111111111111111111 # 1.8.1
+    tag: main-intel-a91dd3be72f70dd1b3cb6e252f35fa17b93f596c # v1.8.1
     pullPolicy: IfNotPresent
 
   service:

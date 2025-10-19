@@ -10,7 +10,7 @@
         "/\\.ya?ml$/"
       ],
       "matchStrings": [
-        "tag:\\s*main\\-intel\\-[a-f0-9]{40}\\s*#\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "tag:\\s*main\\-intel\\-(?<currentDigest>[a-f0-9]{40})\\s*#\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "ggml-org/whisper.cpp",
