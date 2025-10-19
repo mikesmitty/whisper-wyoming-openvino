@@ -1,24 +1,39 @@
-name: Release Helm Chart to GHCR
+name: Release Please
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'helm/whisper-wyoming-openvino/**'
-      - '.github/workflows/helm-release.yaml'
-  workflow_dispatch:
 
-env:
-  REGISTRY: ghcr.io
-  CHART_NAME: whisper-wyoming-openvino
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
 
 jobs:
-  release:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-helm-chart:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
+    env:
+      REGISTRY: ghcr.io
+      CHART_NAME: whisper-wyoming-openvino
 
     steps:
       - name: Checkout repository
