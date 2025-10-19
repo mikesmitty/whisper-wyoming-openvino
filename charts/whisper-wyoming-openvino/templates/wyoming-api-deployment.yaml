@@ -24,8 +24,6 @@ spec:
       - name: wyoming-api
         image: "{{ .Values.wyomingApi.image.repository }}:{{ .Values.wyomingApi.image.tag }}"
         imagePullPolicy: {{ .Values.wyomingApi.image.pullPolicy }}
-        command:
-        - /app/script/run
         args:
         - "--uri"
         - "tcp://0.0.0.0:{{ .Values.wyomingApi.service.port }}"
