@@ -14,7 +14,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      rp: ${{ toJson(steps.release.outputs) }}
+      release_created: ${{ steps.release.outputs['charts/whisper-wyoming-openvino--release_created'] == 'true' }}
     steps:
       - name: Run release-please
         id: release
@@ -24,7 +24,7 @@ jobs:
 
   publish-helm-chart:
     needs: release-please
-    if: ${{ needs.release-please.outputs.rp['charts/whisper-wyoming-openvino--release_created'] == 'true' }}
+    if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
