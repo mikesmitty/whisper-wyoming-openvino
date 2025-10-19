@@ -6,8 +6,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "\\.ya?ml$"
+      "managerFilePatterns": [
+        "/\\.ya?ml$/"
       ],
       "matchStrings": [
         "tag:\\s*main\\-intel\\-[a-f0-9]{40}\\s*#\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
