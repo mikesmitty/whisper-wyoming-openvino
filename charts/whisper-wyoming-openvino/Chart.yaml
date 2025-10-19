@@ -2,7 +2,7 @@ apiVersion: v2
 name: whisper-wyoming-openvino
 description: A Helm chart for Whisper.cpp with Wyoming API on Intel GPU
 type: application
-version: 0.1.5
+version: 0.2.0
 appVersion: "1.0"
 keywords:
   - whisper
