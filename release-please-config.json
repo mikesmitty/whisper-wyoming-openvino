@@ -10,7 +10,14 @@
     },
     "wyoming-api": {
       "release-type": "python",
-      "package-name": "wyoming-api"
+      "package-name": "wyoming-api",
+      "extra-files": [
+        {
+          "path": "wyoming-api/uv.lock",
+          "type": "toml",
+          "jsonpath": "$.package[?(@.name.value=='my-package')].version"
+        }
+      ]
     }
   }
 }
