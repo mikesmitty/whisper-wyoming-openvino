@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/wyoming-api-v0.2.1...wyoming-api-v0.2.2) (2025-10-19)
+
+
+### Bug Fixes
+
+* prod release-please ([e428cbb](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/e428cbb2695f1e4ae490d5e2e723f7d77af8ff72))
+
 ## [0.2.1](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/wyoming-api-v0.2.0...wyoming-api-v0.2.1) (2025-10-19)
 
 
