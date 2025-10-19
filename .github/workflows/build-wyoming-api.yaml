@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: ser/wyoming-whisper-api-client
-          path: wyoming-api
+          path: wyoming-api/wyoming-whisper-api-client
 
       - name: Get commit SHA
         working-directory: wyoming-api
