@@ -2,5 +2,18 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>mikesmitty/renovate-config"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "tag:\\s*main\\-intel\\-[a-f0-9]{40}\\s*#\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "ggml-org/whisper.cpp",
+      "newValueTemplate": "tag: main-intel-{{{newDigest}}} # v{{{newValue}}}"
+    }
   ]
 }
