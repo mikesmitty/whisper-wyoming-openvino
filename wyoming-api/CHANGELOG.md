@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/wyoming-api-v0.2.0...wyoming-api-v0.2.1) (2025-10-19)
+
+
+### Bug Fixes
+
+* update wwac ([a7e40a1](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/a7e40a1c137ef247ec11fb7caebbfcdd4ee45735))
+
 ## [0.2.0](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/wyoming-api-v0.1.0...wyoming-api-v0.2.0) (2025-10-19)
 
 
