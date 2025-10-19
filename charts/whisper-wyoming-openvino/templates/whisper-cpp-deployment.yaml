@@ -68,8 +68,6 @@ spec:
       - name: whisper-cpp
         image: "{{ .Values.whisperCpp.image.repository }}:{{ .Values.whisperCpp.image.tag }}"
         imagePullPolicy: {{ .Values.whisperCpp.image.pullPolicy }}
-        command:
-        - /whisper.cpp/build/bin/whisper-server
         args:
         - "-l"
         - "{{ .Values.whisperCpp.language }}"
