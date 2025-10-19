@@ -1,6 +1,6 @@
 # Example configuration for production deployment
 # Save as custom-values.yaml and install with:
-# helm install whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml
+# helm install whisper-wyoming ./charts/whisper-wyoming -f custom-values.yaml
 
 # OPTION 1: Custom storage class and explicit configuration
 # Use this if you want full control over storage, service exposure, and resources

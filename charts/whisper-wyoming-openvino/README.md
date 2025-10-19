@@ -39,7 +39,7 @@ Install the chart from a local clone:
 ```bash
 git clone https://github.com/mikesmitty/whisper-wyoming-openvino.git
 cd whisper-wyoming-openvino
-helm install whisper-wyoming-openvino ./helm/whisper-wyoming-openvino
+helm install whisper-wyoming-openvino ./charts/whisper-wyoming-openvino
 ```
 
 ### Custom Configuration
@@ -74,7 +74,7 @@ helm install whisper-wyoming-openvino oci://ghcr.io/mikesmitty/whisper-wyoming-o
 Or from source:
 
 ```bash
-helm install whisper-wyoming-openvino ./helm/whisper-wyoming-openvino -f custom-values.yaml
+helm install whisper-wyoming-openvino ./charts/whisper-wyoming-openvino -f custom-values.yaml
 ```
 
 ## Configuration

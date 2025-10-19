@@ -53,16 +53,16 @@ jobs:
 
       - name: Package Helm chart
         run: |
-          helm package helm/${{ env.CHART_NAME }}
+          helm package charts/${{ env.CHART_NAME }}
 
       - name: Push Helm chart to GHCR
         run: |
-          CHART_VERSION=$(helm show chart helm/${{ env.CHART_NAME }} | awk '/^version:/ {print $2}')
+          CHART_VERSION=$(helm show chart charts/${{ env.CHART_NAME }} | awk '/^version:/ {print $2}')
           helm push ${{ env.CHART_NAME }}-${CHART_VERSION}.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}
 
       - name: Output chart details
         run: |
-          CHART_VERSION=$(helm show chart helm/${{ env.CHART_NAME }} | awk '/^version:/ {print $2}')
+          CHART_VERSION=$(helm show chart charts/${{ env.CHART_NAME }} | awk '/^version:/ {print $2}')
           echo "Chart pushed successfully!"
           echo "Chart: ${{ env.CHART_NAME }}"
           echo "Version: ${CHART_VERSION}"

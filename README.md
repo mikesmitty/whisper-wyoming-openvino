@@ -42,7 +42,7 @@ git clone https://github.com/mikesmitty/whisper-wyoming-openvino.git
 cd whisper-wyoming-openvino
 
 # Install the Helm chart
-helm install whisper-wyoming-openvino ./helm/whisper-wyoming-openvino
+helm install whisper-wyoming-openvino ./charts/whisper-wyoming-openvino
 
 # Check the status
 helm status whisper-wyoming-openvino
@@ -53,7 +53,7 @@ kubectl port-forward svc/whisper-wyoming-openvino-wyoming-api 7891:7891
 
 ## Documentation
 
-See the [Helm chart README](helm/whisper-wyoming-openvino/README.md) for detailed configuration options and usage instructions.
+See the [Helm chart README](charts/whisper-wyoming-openvino/README.md) for detailed configuration options and usage instructions.
 
 ## Architecture
 

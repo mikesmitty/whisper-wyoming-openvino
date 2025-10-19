@@ -1,6 +1,6 @@
 {
   "packages": {
-    "helm/whisper-wyoming-openvino": {
+    "charts/whisper-wyoming-openvino": {
       "release-type": "helm",
       "package-name": "whisper-wyoming-openvino",
       "changelog-path": "CHANGELOG.md",

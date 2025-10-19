@@ -33,7 +33,7 @@ cd whisper-wyoming-openvino
 
 ### 2. Install with default settings
 ```bash
-helm install whisper-wyoming ./helm/whisper-wyoming
+helm install whisper-wyoming ./charts/whisper-wyoming
 ```
 
 This will:
@@ -76,7 +76,7 @@ wyomingApi:
 
 Install with custom values:
 ```bash
-helm install whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml
+helm install whisper-wyoming ./charts/whisper-wyoming -f custom-values.yaml
 ```
 
 Get the external IP:
@@ -110,7 +110,7 @@ nodeSelector:
 
 Install with customizations:
 ```bash
-helm install whisper-wyoming ./helm/whisper-wyoming -f values-custom.yaml
+helm install whisper-wyoming ./charts/whisper-wyoming -f values-custom.yaml
 ```
 
 ## Integration with Home Assistant
@@ -163,7 +163,7 @@ kubectl describe node <node-name> | grep gpu.intel.com/i915
 
 ```bash
 # Update values
-helm upgrade whisper-wyoming ./helm/whisper-wyoming -f custom-values.yaml
+helm upgrade whisper-wyoming ./charts/whisper-wyoming -f custom-values.yaml
 
 # Check upgrade status
 helm status whisper-wyoming
@@ -183,4 +183,4 @@ kubectl delete pvc whisper-wyoming-models
 
 For issues and questions:
 - GitHub Issues: https://github.com/mikesmitty/whisper-wyoming-openvino/issues
-- Detailed docs: See [helm/whisper-wyoming/README.md](helm/whisper-wyoming/README.md)
+- Detailed docs: See [charts/whisper-wyoming/README.md](charts/whisper-wyoming/README.md)
