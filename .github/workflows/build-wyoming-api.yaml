@@ -14,7 +14,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: mikesmitty/ser-wyoming-whisper-api-client
+  IMAGE_NAME: mikesmitty/wwac
 
 jobs:
   build-and-push:
@@ -26,12 +26,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Checkout ser/wyoming-whisper-api-client
-        uses: actions/checkout@v5
-        with:
-          repository: ser/wyoming-whisper-api-client
-          path: wyoming-api/wyoming-whisper-api-client
 
       - name: Get commit SHA
         working-directory: wyoming-api
