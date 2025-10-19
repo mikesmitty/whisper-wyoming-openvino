@@ -1,0 +1,84 @@
+name: Whisper.cpp Image
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - ".github/workflows/build-whisper-cpp.yaml"
+            - "whisper.cpp/**"
+    schedule:
+        # Rebuild monthly to get updates
+        - cron: "0 0 1 * *"
+    workflow_dispatch:
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: mikesmitty/whisper-cpp
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+
+            - name: Extract versions from Dockerfile
+              working-directory: whisper.cpp
+              run: |
+                  awk -F'=' '/^ARG WHISPER_CPP_VERSION=/ {print "WHISPER_CPP_VERSION=" $2}' Dockerfile >> $GITHUB_ENV
+                  awk -F'=' '/^ARG ONEAPI_VERSION=/ {print "ONEAPI_VERSION=" $2}' Dockerfile >> $GITHUB_ENV
+
+            - name: Get commit SHA
+              working-directory: whisper.cpp
+              run: |
+                  echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+                  echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Log in to Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Extract metadata
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  tags: |
+                      type=raw,value=latest
+                      type=raw,value=${{ env.WHISPER_CPP_VERSION }}
+                      type=raw,value=${{ env.WHISPER_CPP_VERSION }}-{{date 'YYYYMMDD'}}
+                      type=sha,prefix=${{ env.WHISPER_CPP_VERSION }}-{{branch}}-
+                      type=raw,value={{date 'YYYYMMDD'}}
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v6
+              with:
+                  context: whisper.cpp
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+                  platforms: linux/amd64
+                  build-args: |
+                      WHISPER_CPP_VERSION=${{ env.WHISPER_CPP_VERSION }}
+                      ONEAPI_VERSION=${{ env.ONEAPI_VERSION }}
+
+            - name: Output image details
+              run: |
+                  echo "Image built and pushed successfully"
+                  echo "Tags: ${{ steps.meta.outputs.tags }}"
+                  echo "Whisper.cpp version: ${{ env.WHISPER_CPP_VERSION }}"
+                  echo "oneAPI version: ${{ env.ONEAPI_VERSION }}"
+                  echo "Source commit: ${{ env.COMMIT_SHA }}"
