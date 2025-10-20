@@ -48,7 +48,7 @@ spec:
             export XDG_CACHE_HOME="$MODEL_DIR/.cache"
             
             # Run conversion using uv
-            uv run --with 'openvino-dev[pytorch,onnx]' --with openai-whisper \
+            uv run --with 'openvino-dev[pytorch,onnx]==2024.6.0' --with openai-whisper \
               /scripts/convert-whisper-to-openvino.py --model "$MODEL"
             
             echo "OpenVINO model conversion complete"

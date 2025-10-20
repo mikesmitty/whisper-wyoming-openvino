@@ -14,7 +14,7 @@ def convert_encoder(hparams, encoder, mname):
 
     mel = torch.zeros((1, hparams.n_mels, 3000))
 
-    onnx_folder = os.path.join(os.path.dirname(__file__), "onnx_encoder")
+    onnx_folder = os.path.join(os.getcwd(), "onnx_encoder")
 
     #create a directory to store the onnx model, and other collateral that is saved during onnx export procedure
     if not os.path.isdir(onnx_folder):
@@ -38,7 +38,7 @@ def convert_encoder(hparams, encoder, mname):
     ov_model = onnx_fe.convert(onnx_model)
 
     # Serialize the OpenVINO model to XML and BIN files
-    serialize(ov_model, xml_path=os.path.join(os.path.dirname(__file__), "ggml-" + mname + "-encoder-openvino.xml"))
+    serialize(ov_model, xml_path=os.path.join(os.getcwd(), "ggml-" + mname + "-encoder-openvino.xml"))
 
     # Cleanup
     if os.path.isdir(onnx_folder):

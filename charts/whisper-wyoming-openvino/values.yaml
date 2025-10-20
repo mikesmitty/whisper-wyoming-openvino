@@ -95,7 +95,7 @@ modelDownload:
   enabled: true
   image:
     repository: ghcr.io/astral-sh/uv
-    tag: python3.14-trixie
+    tag: python3.12-trixie # Depends on associated openvino-dev version (e.g. 2024.6.0)
     pullPolicy: IfNotPresent
 
 # Persistent storage for models
