@@ -43,27 +43,6 @@ spec:
           MODEL_DIR="/models"
           mkdir -p "$MODEL_DIR"
           
-          # OpenVINO IR-format files (for Intel GPU acceleration)
-          XML_FILE="$MODEL_DIR/ggml-${MODEL}-encoder-openvino.xml"
-          BIN_FILE="$MODEL_DIR/ggml-${MODEL}-encoder-openvino.bin"
-
-          # Convert to OpenVINO if not already done
-          if [ ! -f "$XML_FILE" ] || [ ! -f "$BIN_FILE" ]; then
-            echo "Converting model to OpenVINO: $MODEL"
-            
-            cd "$MODEL_DIR"
-            
-            # Set cache directory for whisper model downloads
-            export XDG_CACHE_HOME="$MODEL_DIR/.cache"
-            
-            # Run conversion (dependencies are pre-installed in the image)
-            python /scripts/convert-whisper-to-openvino.py --model "$MODEL"
-            
-            echo "OpenVINO model conversion complete"
-          else
-            echo "OpenVINO model already exists: $MODEL"
-          fi
-
           # GGML-format model file required by whisper.cpp
           GGML_FILE="$MODEL_DIR/ggml-${MODEL}.bin"
 
@@ -97,8 +76,6 @@ spec:
         - "{{ .Values.whisperCpp.beamSize }}"
         - "-m"
         - "/models/ggml-{{ .Values.whisperCpp.model }}.bin"
-        - "-oved"
-        - "{{ .Values.whisperCpp.openVinoDevice }}"
         - "--host"
         - "0.0.0.0"
         - "--port"
