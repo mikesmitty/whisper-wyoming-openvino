@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.4.0...whisper-wyoming-openvino-v0.4.1) (2025-10-20)
+
+
+### Bug Fixes
+
+* remove openvino options in favor of intel sycl ([2f28d27](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/2f28d27231041c0060b8117edfa08dd01bd87f5c))
+
 ## [0.4.0](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.3.2...whisper-wyoming-openvino-v0.4.0) (2025-10-20)
 
 
