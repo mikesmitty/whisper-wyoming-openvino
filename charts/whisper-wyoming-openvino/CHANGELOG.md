@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.3.2...whisper-wyoming-openvino-v0.4.0) (2025-10-20)
+
+
+### Features
+
+* download ggml-format model file ([81b06ab](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/81b06abf54537729f83344bc43d108aac6785f80))
+
+
+### Bug Fixes
+
+* recreate deployment instead of rolling update ([81b06ab](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/81b06abf54537729f83344bc43d108aac6785f80))
+* update model file path in command line ([81b06ab](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/81b06abf54537729f83344bc43d108aac6785f80))
+
 ## [0.3.2](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.3.1...whisper-wyoming-openvino-v0.3.2) (2025-10-20)
 
 
