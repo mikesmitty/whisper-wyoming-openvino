@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.2.0...whisper-wyoming-openvino-v0.3.0) (2025-10-20)
+
+
+### Features
+
+* download and convert ggml models to openvino IR ([5e02019](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/5e020195c6272eb77dad59bdf2c8168f9e9f0479))
+
 ## [0.2.0](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.1.5...whisper-wyoming-openvino-v0.2.0) (2025-10-19)
 
 
