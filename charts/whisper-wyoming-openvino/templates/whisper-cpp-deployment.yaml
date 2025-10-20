@@ -6,6 +6,8 @@ metadata:
     {{- include "whisper-wyoming-openvino.whisperCppLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "whisper-wyoming-openvino.whisperCppSelectorLabels" . | nindent 6 }}
@@ -61,7 +63,19 @@ spec:
           else
             echo "OpenVINO model already exists: $MODEL"
           fi
-          
+
+          # GGML-format model file required by whisper.cpp
+          GGML_FILE="$MODEL_DIR/ggml-${MODEL}.bin"
+
+          # Download GGML model if not already present
+          if [ ! -f "$GGML_FILE" ]; then
+            echo "Downloading GGML model: $MODEL"
+            bash /scripts/download-ggml-model.sh "$MODEL" "$MODEL_DIR"
+            echo "GGML model download complete"
+          else
+            echo "GGML model already exists: $MODEL"
+          fi
+
           # Ensure SYCL cache directory exists
           mkdir -p "${MODEL_DIR}/sycl_cache"
         volumeMounts:
@@ -82,7 +96,9 @@ spec:
         - "-bs"
         - "{{ .Values.whisperCpp.beamSize }}"
         - "-m"
-        - "/models/{{ .Values.whisperCpp.model }}.bin"
+        - "/models/ggml-{{ .Values.whisperCpp.model }}.bin"
+        - "-oved"
+        - "{{ .Values.whisperCpp.openVinoDevice }}"
         - "--host"
         - "0.0.0.0"
         - "--port"

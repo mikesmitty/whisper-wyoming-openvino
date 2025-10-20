@@ -7,3 +7,7 @@ metadata:
 data:
   convert-whisper-to-openvino.py: |
 {{ .Files.Get "files/convert-whisper-to-openvino.py" | indent 4 }}
+  convert-pt-to-ggml.py: |
+{{ .Files.Get "files/convert-pt-to-ggml.py" | indent 4 }}
+  download-ggml-model.sh: |
+{{ .Files.Get "files/download-ggml-model.sh" | indent 4 }}
