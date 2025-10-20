@@ -94,8 +94,8 @@ wyomingApi:
 modelDownload:
   enabled: true
   image:
-    repository: ghcr.io/astral-sh/uv
-    tag: python3.12-trixie # Depends on associated openvino-dev version (e.g. 2024.6.0)
+    repository: ghcr.io/mikesmitty/whisper-model-converter
+    tag: "20251020"
     pullPolicy: IfNotPresent
 
 # Persistent storage for models

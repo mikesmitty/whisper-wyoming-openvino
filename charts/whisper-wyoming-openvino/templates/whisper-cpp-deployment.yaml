@@ -25,6 +25,13 @@ spec:
       - name: model-download
         image: "{{ .Values.modelDownload.image.repository }}:{{ .Values.modelDownload.image.tag }}"
         imagePullPolicy: {{ .Values.modelDownload.image.pullPolicy }}
+        env:
+        - name: HOME
+          value: /models
+        - name: USER
+          value: whisper
+        - name: UV_HTTP_TIMEOUT
+          value: "600s"
         command:
         - sh
         - -c
@@ -47,9 +54,8 @@ spec:
             # Set cache directory for whisper model downloads
             export XDG_CACHE_HOME="$MODEL_DIR/.cache"
             
-            # Run conversion using uv
-            uv run --with 'openvino-dev[pytorch,onnx]==2024.6.0' --with openai-whisper \
-              /scripts/convert-whisper-to-openvino.py --model "$MODEL"
+            # Run conversion (dependencies are pre-installed in the image)
+            python /scripts/convert-whisper-to-openvino.py --model "$MODEL"
             
             echo "OpenVINO model conversion complete"
           else
