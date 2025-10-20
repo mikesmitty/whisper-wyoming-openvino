@@ -29,38 +29,40 @@ spec:
         - sh
         - -c
         - |
+          set -e
           MODEL="{{ .Values.whisperCpp.model }}"
           MODEL_DIR="/models"
           mkdir -p "$MODEL_DIR"
           
-          # Files with model name preserved for change detection
-          XML_FILE="$MODEL_DIR/${MODEL}.xml"
-          BIN_FILE="$MODEL_DIR/${MODEL}.bin"
-          
-          # Check if both required files exist
+          # OpenVINO IR-format files (for Intel GPU acceleration)
+          XML_FILE="$MODEL_DIR/ggml-${MODEL}-encoder-openvino.xml"
+          BIN_FILE="$MODEL_DIR/ggml-${MODEL}-encoder-openvino.bin"
+
+          # Convert to OpenVINO if not already done
           if [ ! -f "$XML_FILE" ] || [ ! -f "$BIN_FILE" ]; then
-            echo "Downloading model: $MODEL"
+            echo "Converting model to OpenVINO: $MODEL"
             
-            # Download XML file
-            XML_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.xml"
-            wget -O "$XML_FILE" "$XML_URL" || exit 1
-            echo "Downloaded XML file"
+            cd "$MODEL_DIR"
             
-            # Download BIN file
-            BIN_URL="https://huggingface.co/OpenVINO/${MODEL}/resolve/main/openvino_encoder_model.bin"
-            wget -O "$BIN_FILE" "$BIN_URL" || exit 1
-            echo "Downloaded BIN file"
+            # Set cache directory for whisper model downloads
+            export XDG_CACHE_HOME="$MODEL_DIR/.cache"
             
-            echo "Model downloaded successfully"
+            # Run conversion using uv
+            uv run --with 'openvino-dev[pytorch,onnx]' --with openai-whisper \
+              /scripts/convert-whisper-to-openvino.py --model "$MODEL"
+            
+            echo "OpenVINO model conversion complete"
           else
-            echo "Model already exists: $MODEL"
+            echo "OpenVINO model already exists: $MODEL"
           fi
           
           # Ensure SYCL cache directory exists
-          mkdir -p /models/sycl_cache
+          mkdir -p "${MODEL_DIR}/sycl_cache"
         volumeMounts:
         - name: models
           mountPath: /models
+        - name: conversion-script
+          mountPath: /scripts
         securityContext:
           {{- toYaml .Values.whisperCpp.securityContext | nindent 10 }}
       {{- end }}
@@ -124,6 +126,9 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
+      - name: conversion-script
+        configMap:
+          name: {{ include "whisper-wyoming-openvino.fullname" . }}-conversion-script
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

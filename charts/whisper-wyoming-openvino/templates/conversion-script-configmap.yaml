@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "whisper-wyoming-openvino.fullname" . }}-conversion-script
+  labels:
+    {{- include "whisper-wyoming-openvino.labels" . | nindent 4 }}
+data:
+  convert-whisper-to-openvino.py: |
+{{ .Files.Get "files/convert-whisper-to-openvino.py" | indent 4 }}

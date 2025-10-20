@@ -48,7 +48,7 @@ Create a `custom-values.yaml` file:
 
 ```yaml
 whisperCpp:
-  model: base.en  # Options: tiny.en, base.en, small.en, medium.en, large-v3
+  model: large-v3-turbo  # See "Available Whisper Models" section below for full list
   language: en
   beamSize: 5
 
@@ -103,28 +103,32 @@ The following table lists the configurable parameters:
 
 ## Available Whisper Models
 
-OpenVINO-optimized models (recommended for Intel GPU):
-- `distil-whisper-large-v3-int8-ov` - Default, good balance of quality and performance
-- `distil-whisper-large-v3-int4-ov` - Smaller size, faster inference
-- `distil-whisper-large-v3-fp16-ov` - Higher quality, more resources
-- `distil-whisper-large-v2-int8-ov` - Previous version, int8 quantization
-- `distil-whisper-large-v2-int4-ov` - Previous version, int4 quantization
-- `distil-whisper-large-v2-fp16-ov` - Previous version, fp16 precision
-- `whisper-large-v3-int8-ov` - Full large model, int8 quantization
-- `whisper-large-v3-int4-ov` - Full large model, int4 quantization
-- `whisper-large-v3-fp16-ov` - Full large model, fp16 precision
-- `whisper-medium-int8-ov` - Medium model, int8 quantization
-- `whisper-medium-int4-ov` - Medium model, int4 quantization
-- `whisper-medium-fp16-ov` - Medium model, fp16 precision
-- `whisper-medium.en-int8-ov` - Medium English-only, int8
-- `whisper-medium.en-int4-ov` - Medium English-only, int4
-- `whisper-medium.en-fp16-ov` - Medium English-only, fp16
-- `whisper-base-int8-ov` - Base model, int8 quantization
-- `whisper-base-int4-ov` - Base model, int4 quantization
-- `whisper-base-fp16-ov` - Base model, fp16 precision
-- `whisper-tiny-int8-ov` - Tiny model, int8 quantization
-- `whisper-tiny-int4-ov` - Tiny model, int4 quantization
-- `whisper-tiny-fp16-ov` - Tiny model, fp16 precision
+The following models are automatically converted to OpenVINO format on first run for optimal Intel GPU performance:
+
+**Multilingual Models:**
+- `tiny` - Smallest model, fastest inference, lower accuracy (~75MB)
+- `base` - Small model, good balance of speed and accuracy (~142MB)
+- `small` - Medium model, better accuracy (~466MB)
+- `medium` - Large model, high accuracy (~1.5GB)
+- `large-v1` - Very large model, highest accuracy (v1) (~2.9GB)
+- `large-v2` - Very large model, highest accuracy (v2) (~2.9GB)
+- `large-v3` - Very large model, highest accuracy (v3) (~2.9GB)
+- `large-v3-turbo` - Optimized large model for faster inference (default) (~1.6GB)
+
+**English-Only Models (better accuracy for English):**
+- `tiny.en` - Smallest English-only model (~75MB)
+- `base.en` - Small English-only model (~142MB)
+- `small.en` - Medium English-only model (~466MB)
+- `medium.en` - Large English-only model (~1.5GB)
+
+### Model Selection Guide
+
+- **For fastest inference**: Use `tiny` or `tiny.en`
+- **For best quality**: Use `large-v3` or `large-v3-turbo`
+- **For English-only (recommended)**: Use `.en` variants for better accuracy
+- **Recommended default**: `large-v3-turbo` (best balance of speed and accuracy)
+
+**Note:** The init container automatically downloads the base model from HuggingFace and converts it to OpenVINO format. The conversion happens once and the resulting OpenVINO model is cached in persistent storage. Quantized models are not supported with OpenVINO conversion.
 
 ## Usage
 
