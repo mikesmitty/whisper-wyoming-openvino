@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.3.1...whisper-wyoming-openvino-v0.3.2) (2025-10-20)
+
+
+### Bug Fixes
+
+* use custom model download/conversion image ([7ec4395](https://github.com/mikesmitty/whisper-wyoming-openvino/commit/7ec43959ae73716d9a048060f4476bede914aa3e))
+
 ## [0.3.1](https://github.com/mikesmitty/whisper-wyoming-openvino/compare/whisper-wyoming-openvino-v0.3.0...whisper-wyoming-openvino-v0.3.1) (2025-10-20)
 
 
